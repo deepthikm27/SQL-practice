@@ -1,0 +1,169 @@
+1) Find all the tracks that have a length of 5,000,000 milliseconds or more.
+
+select Name 
+from Tracks
+where Milliseconds >= 5000000
+
++-------------------------+
+| Name                    |
++-------------------------+
+| Occupation / Precipice  |
+| Through a Looking Glass |
++-------------------------+
+
+2) Find all the invoices whose total is between $5 and $15 dollars.
+
+select count(*) as Total
+from Invoices
+where Total between 5 and 15
+
++-------+
+| Total |
++-------+
+|   168 |
++-------+
+
+3) Find all the customers from the following States: RJ, DF, AB, BC, CA, WA, NY.
+
+select FirstName,LastName,Company 
+from Customers
+where NOT State = 'SP'
+AND NOT State = 'QC'
+AND NOT State = 'None'
+
++-----------+----------+-----------------------+
+| FirstName | LastName | Company               |
++-----------+----------+-----------------------+
+| Roberto   | Almeida  | Riotur                |
+| Fernanda  | Ramos    | None                  |
+| Mark      | Philips  | Telus                 |
+| Jennifer  | Peterson | Rogers Canada         |
+| Frank     | Harris   | Google Inc.           |
+| Jack      | Smith    | Microsoft Corporation |
+| Michelle  | Brooks   | None                  |
+| Tim       | Goyer    | Apple Inc.            |
+| Dan       | Miller   | None                  |
+| Kathy     | Chase    | None                  |
++-----------+----------+-----------------------+
+(Output limit exceeded, 10 of 26 total rows shown)
+
+4) Find all the invoices for customer 56 and 58 where the total was between $1.00 and $5.00.
+
+select *
+from Invoices
+where CustomerId in (56,58)
+and (Total between 1 and 5)
+
++-----------+------------+---------------------+---------------------+--------------+--------------+----------------+-------------------+-------+
+| InvoiceId | CustomerId | InvoiceDate         | BillingAddress      | BillingCity  | BillingState | BillingCountry | BillingPostalCode | Total |
++-----------+------------+---------------------+---------------------+--------------+--------------+----------------+-------------------+-------+
+|       119 |         56 | 2010-06-12 00:00:00 | 307 Macacha Güemes  | Buenos Aires |         None | Argentina      | 1106              |  1.98 |
+|       142 |         56 | 2010-09-14 00:00:00 | 307 Macacha Güemes  | Buenos Aires |         None | Argentina      | 1106              |  3.96 |
+|       337 |         56 | 2013-01-28 00:00:00 | 307 Macacha Güemes  | Buenos Aires |         None | Argentina      | 1106              |  1.98 |
+|       120 |         58 | 2010-06-12 00:00:00 | 12,Community Centre | Delhi        |         None | India          | 110017            |  1.98 |
+|       315 |         58 | 2012-10-27 00:00:00 | 12,Community Centre | Delhi        |         None | India          | 110017            |  1.98 |
+|       338 |         58 | 2013-01-29 00:00:00 | 12,Community Centre | Delhi        |         None | India          | 110017            |  3.96 |
+|       412 |         58 | 2013-12-22 00:00:00 | 12,Community Centre | Delhi        |         None | India          | 110017            |  1.99 |
++-----------+------------+---------------------+---------------------+--------------+--------------+----------------+-------------------+-------+
+
+5) Find all the tracks whose name starts with 'All'.
+
+select *
+from Tracks
+where Name like 'All%'
+
++---------+----------------------------------------+---------+-------------+---------+--------------------------------------------------+--------------+-----------+-----------+
+| TrackId | Name                                   | AlbumId | MediaTypeId | GenreId | Composer                                         | Milliseconds |     Bytes | UnitPrice |
++---------+----------------------------------------+---------+-------------+---------+--------------------------------------------------+--------------+-----------+-----------+
+|      38 | All I Really Want                      |       6 |           1 |       1 | Alanis Morissette & Glenn Ballard                |       284891 |   9375567 |      0.99 |
+|     134 | All For You                            |      14 |           1 |       3 | None                                             |       235833 |   7726948 |      0.99 |
+|     385 | All Star                               |      33 |           1 |       7 | Nando Reis                                       |       176326 |   5891697 |      0.99 |
+|    1009 | All My Life                            |      81 |           1 |       4 | Foo Fighters                                     |       263653 |   8665545 |      0.99 |
+|    1608 | All My Love                            |     130 |           1 |       1 | Robert Plant & John Paul Jones                   |       356284 |  11684862 |      0.99 |
+|    1892 | All Within My Hands                    |     155 |           1 |       3 | Bob Rock/James Hetfield/Kirk Hammett/Lars Ulrich |       527986 |  17162741 |      0.99 |
+|    2192 | All or None                            |     180 |           1 |       1 | Stone Gossard                                    |       277655 |   9104728 |      0.99 |
+|    2274 | All Dead, All Dead                     |     186 |           1 |       1 | May                                              |       190119 |   6144878 |      0.99 |
+|    2888 | All the Best Cowboys Have Daddy Issues |     230 |           3 |      19 | None                                             |      2555492 | 211743651 |      1.99 |
+|    2969 | All Because Of You                     |     235 |           1 |       1 | Adam Clayton, Bono, Larry Mullen & The Edge      |       219141 |   7198014 |      0.99 |
++---------+----------------------------------------+---------+-------------+---------+--------------------------------------------------+--------------+-----------+-----------+
+
+6)  Find all the customer emails that start with "J" and are from gmail.com.
+
+select FirstName, LastName, Email
+from Customers
+where Email like 'J%@gmail.com'
+
++-----------+----------+---------------------+
+| FirstName | LastName | Email               |
++-----------+----------+---------------------+
+| Julia     | Barnett  | jubarnett@gmail.com |
++-----------+----------+---------------------+
+
+7) Find all the invoices from the billing city Brasília, Edmonton, and Vancouver and sort in descending order by invoice ID.
+
+Select InvoiceId, BillingCity, Total
+from Invoices
+where BillingCity in ('Brasília','Edmonton','Vancouver')
+order by InvoiceId DESC
+
++-----------+-------------+-------+
+| InvoiceId | BillingCity | Total |
++-----------+-------------+-------+
+|       362 | Edmonton    | 13.86 |
+|       351 | Edmonton    |  1.98 |
+|       328 | Vancouver   |  0.99 |
+|       319 | Brasília    |  8.91 |
+|       276 | Vancouver   |  5.94 |
+|       264 | Brasília    | 13.86 |
+|       254 | Vancouver   |  3.96 |
+|       253 | Brasília    |  1.98 |
+|       231 | Vancouver   |  1.98 |
+|       230 | Edmonton    |  0.99 |
++-----------+-------------+-------+
+(Output limit exceeded, 10 of 21 total rows shown)
+
+8) Show the number of orders placed by each customer (hint: this is found in the invoices table) and sort the result by the number of orders in descending order.
+
+SELECT CustomerId, COUNT(*) AS Orders
+FROM Invoices
+GROUP BY CustomerId
+ORDER BY Orders DESC
+
++------------+--------+
+| CustomerId | Orders |
++------------+--------+
+|          1 |      7 |
+|          2 |      7 |
+|          3 |      7 |
+|          4 |      7 |
+|          5 |      7 |
+|          6 |      7 |
+|          7 |      7 |
+|          8 |      7 |
+|          9 |      7 |
+|         10 |      7 |
++------------+--------+
+(Output limit exceeded, 10 of 59 total rows shown)
+
+9) Find the albums with 12 or more tracks.
+
+SELECT AlbumId, Count(*) AS TotalTracks
+FROM Tracks
+GROUP BY AlbumId
+HAVING COUNT (*) >= 12
+
++---------+-------------+
+| AlbumId | TotalTracks |
++---------+-------------+
+|       5 |          15 |
+|       6 |          13 |
+|       7 |          12 |
+|       8 |          14 |
+|      10 |          14 |
+|      11 |          12 |
+|      12 |          12 |
+|      14 |          13 |
+|      18 |          17 |
+|      21 |          18 |
++---------+-------------+
+(Output limit exceeded, 10 of 158 total rows shown)
