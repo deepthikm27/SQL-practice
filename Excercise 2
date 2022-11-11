@@ -1,0 +1,119 @@
+1) How many albums does the artist Led Zeppelin have?
+
+select count(*) as Noofalbum
+from albums
+where ArtistId in(
+    select ArtistId 
+    from artists
+    where Name = 'Led Zeppelin');
+    
+2) Create a list of album titles and the unit prices for the artist "Audioslave".
+
+select Name,AlbumId,UnitPrice
+from tracks
+where AlbumId in
+(select AlbumId
+from Albums
+where ArtistId in
+(select ArtistId 
+from artists
+where Name = 'Audioslave'))
+;
+
++--------------------------+---------+-----------+
+| Name                     | AlbumId | UnitPrice |
++--------------------------+---------+-----------+
+| Cochise                  |      10 |      0.99 |
+| Show Me How to Live      |      10 |      0.99 |
+| Gasoline                 |      10 |      0.99 |
+| What You Are             |      10 |      0.99 |
+| Like a Stone             |      10 |      0.99 |
+| Set It Off               |      10 |      0.99 |
+| Shadow on the Sun        |      10 |      0.99 |
+| I am the Highway         |      10 |      0.99 |
+| Exploder                 |      10 |      0.99 |
+| Hypnotize                |      10 |      0.99 |
+| Bring'em Back Alive      |      10 |      0.99 |
+| Light My Way             |      10 |      0.99 |
+| Getaway Car              |      10 |      0.99 |
+| The Last Remaining Light |      10 |      0.99 |
+| Your Time Has Come       |      11 |      0.99 |
+| Out Of Exile             |      11 |      0.99 |
+| Be Yourself              |      11 |      0.99 |
+| Doesn't Remind Me        |      11 |      0.99 |
+| Drown Me Slowly          |      11 |      0.99 |
+| Heaven's Dead            |      11 |      0.99 |
+| The Worm                 |      11 |      0.99 |
+| Man Or Animal            |      11 |      0.99 |
+| Yesterday To Tomorrow    |      11 |      0.99 |
+| Dandelion                |      11 |      0.99 |
+| #1 Zero                  |      11 |      0.99 |
++--------------------------+---------+-----------+
+(Output limit exceeded, 25 of 40 total rows shown)
+
+3) Find the first and last name of any customer who does not have an invoice.
+
+Select c.FirstName, c.LastName, i.Invoiceid
+from customers c 
+inner join invoices i
+on c.CustomerId = i.CustomerId
+
+4) Find the total price for each album.
+
+select a.Title, sum(t.UnitPrice) as Total_Price
+from tracks t
+inner join albums a
+on t.AlbumId = a.AlbumId
+group by a.Title
+WHERE Invoiceid IS NULL
+
++-------------------------------------------------------------------------+-------------+
+| Title                                                                   | Total_Price |
++-------------------------------------------------------------------------+-------------+
+| ...And Justice For All                                                  |        8.91 |
+| 20th Century Masters - The Millennium Collection: The Best of Scorpions |       11.88 |
+| A Copland Celebration, Vol. I                                           |        0.99 |
+| A Matter of Life and Death                                              |       10.89 |
+| A Real Dead One                                                         |       11.88 |
+| A Real Live One                                                         |       10.89 |
+| A Soprano Inspired                                                      |        0.99 |
+| A TempestadeTempestade Ou O Livro Dos Dias                              |       14.85 |
+| A-Sides                                                                 |       16.83 |
+| Ace Of Spades                                                           |       14.85 |
+| Achtung Baby                                                            |       11.88 |
+| Acústico                                                                |       21.78 |
+| Acústico MTV                                                            |       20.79 |
+| Acústico MTV [Live]                                                     |       16.83 |
+| Adams, John: The Chairman Dances                                        |        0.99 |
+| Adorate Deum: Gregorian Chant from the Proper of the Mass               |        0.99 |
+| Afrociberdelia                                                          |       22.77 |
+| Album Of The Year                                                       |       11.88 |
+| Alcohol Fueled Brewtality Live! [Disc 1]                                |       12.87 |
+| Alcohol Fueled Brewtality Live! [Disc 2]                                |        4.95 |
+| All That You Can't Leave Behind                                         |       10.89 |
+| Allegri: Miserere                                                       |        0.99 |
+| American Idiot                                                          |       12.87 |
+| Angel Dust                                                              |       13.86 |
+| Ao Vivo [IMPORT]                                                        |       18.81 |
++-------------------------------------------------------------------------+-------------+
+(Output limit exceeded, 25 of 347 total rows shown)
+
+- What is the total price for the album “Big Ones”?
+
+select a.Title, sum(t.UnitPrice) as Total_Price
+from tracks t
+inner join albums a
+on t.AlbumId = a.AlbumId
+where a.Title = 'Big Ones'
+group by a.Title
+
++----------+-------------+
+| Title    | Total_Price |
++----------+-------------+
+| Big Ones |       14.85 |
++----------+-------------+
+
+5) How many records are created when you apply a Cartesian join to the invoice and invoice items table?
+select invoices.InvoiceId
+from invoices
+cross join invoice_items
