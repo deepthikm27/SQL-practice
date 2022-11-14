@@ -1,0 +1,155 @@
+1) Pull a list of customer ids with the customer’s full name, and address, along with combining their city and country together. 
+Be sure to make a space in between these two and make it UPPER CASE. (e.g. LOS ANGELES USA)
+
+select CustomerId
+      ,FirstName
+      ,LastName
+      ,upper(City ||' ' || Country) as City
+from Customers
+
++------------+-----------+-------------+----------------------------+
+| CustomerId | FirstName | LastName    | City                       |
++------------+-----------+-------------+----------------------------+
+|          1 | Luís      | Gonçalves   | SãO JOSé DOS CAMPOS BRAZIL |
+|          2 | Leonie    | Köhler      | STUTTGART GERMANY          |
+|          3 | François  | Tremblay    | MONTRéAL CANADA            |
+|          4 | Bjørn     | Hansen      | OSLO NORWAY                |
+|          5 | František | Wichterlová | PRAGUE CZECH REPUBLIC      |
+|          6 | Helena    | Holý        | PRAGUE CZECH REPUBLIC      |
+|          7 | Astrid    | Gruber      | VIENNE AUSTRIA             |
+|          8 | Daan      | Peeters     | BRUSSELS BELGIUM           |
+|          9 | Kara      | Nielsen     | COPENHAGEN DENMARK         |
+|         10 | Eduardo   | Martins     | SãO PAULO BRAZIL           |
+|         11 | Alexandre | Rocha       | SãO PAULO BRAZIL           |
+|         12 | Roberto   | Almeida     | RIO DE JANEIRO BRAZIL      |
+|         13 | Fernanda  | Ramos       | BRASíLIA BRAZIL            |
+|         14 | Mark      | Philips     | EDMONTON CANADA            |
+|         15 | Jennifer  | Peterson    | VANCOUVER CANADA           |
+|         16 | Frank     | Harris      | MOUNTAIN VIEW USA          |
+|         17 | Jack      | Smith       | REDMOND USA                |
+|         18 | Michelle  | Brooks      | NEW YORK USA               |
+|         19 | Tim       | Goyer       | CUPERTINO USA              |
+|         20 | Dan       | Miller      | MOUNTAIN VIEW USA          |
+|         21 | Kathy     | Chase       | RENO USA                   |
+|         22 | Heather   | Leacock     | ORLANDO USA                |
+|         23 | John      | Gordon      | BOSTON USA                 |
+|         24 | Frank     | Ralston     | CHICAGO USA                |
+|         25 | Victor    | Stevens     | MADISON USA                |
++------------+-----------+-------------+----------------------------+
+(Output limit exceeded, 25 of 59 total rows shown)
+
+2) Create a new employee user id by combining the first 4 letters of the employee’s first name with the first 2 letters of the employee’s last name.
+Make the new field lower case and pull each individual step to show your work.
+
+select FirstName
+      ,LastName
+      ,lower(SUBSTR(FirstName,1,4)||SUBSTR(LastName,1,2)) as user_id
+from Employees
+
++-----------+----------+---------+
+| FirstName | LastName | user_id |
++-----------+----------+---------+
+| Andrew    | Adams    | andrad  |
+| Nancy     | Edwards  | nanced  |
+| Jane      | Peacock  | janepe  |
+| Margaret  | Park     | margpa  |
+| Steve     | Johnson  | stevjo  |
+| Michael   | Mitchell | michmi  |
+| Robert    | King     | robeki  |
+| Laura     | Callahan | laurca  |
++-----------+----------+---------+
+
+3) Show a list of employees who have worked for the company for 15 or more years using the current date function. Sort by lastname ascending.
+
+SELECT FirstName,
+       LastName,
+       HireDate,
+       (STRFTIME('%Y', 'now') - STRFTIME('%Y', HireDate)) 
+          - (STRFTIME('%m-%d', 'now') < STRFTIME('%m-%d', HireDate)) 
+          AS YearsWorked
+FROM Employees
+WHERE YearsWorked >= 15
+ORDER BY LastName ASC
+
++-----------+----------+---------------------+-------------+
+| FirstName | LastName | HireDate            | YearsWorked |
++-----------+----------+---------------------+-------------+
+| Andrew    | Adams    | 2002-08-14 00:00:00 |          20 |
+| Laura     | Callahan | 2004-03-04 00:00:00 |          18 |
+| Nancy     | Edwards  | 2002-05-01 00:00:00 |          20 |
+| Steve     | Johnson  | 2003-10-17 00:00:00 |          19 |
+| Robert    | King     | 2004-01-02 00:00:00 |          18 |
+| Michael   | Mitchell | 2003-10-17 00:00:00 |          19 |
+| Margaret  | Park     | 2003-05-03 00:00:00 |          19 |
+| Jane      | Peacock  | 2002-04-01 00:00:00 |          20 |
++-----------+----------+---------------------+-------------+
+
+4) Profiling the Customers table, answer the following question.
+Are there any columns with null values? Indicate any below. Select all that apply.
+
+select *
+from Customers
+where Company is NULL
+
+check for all the columns given in the options
+FirstName, PostalCode, Company, Fax, Phone, Address
+--ans) Postal Code, Company, Fax, Phone
+
+5) Find the cities with the most customers and rank in descending order
+
+select City,count(*) as rank
+from Customers
+group by City
+order by count(*) DESC
+
++---------------+------+
+| City          | rank |
++---------------+------+
+| Berlin        |    2 |
+| London        |    2 |
+| Mountain View |    2 |
+| Paris         |    2 |
+| Prague        |    2 |
+| São Paulo     |    2 |
+| Amsterdam     |    1 |
+| Bangalore     |    1 |
+| Bordeaux      |    1 |
+| Boston        |    1 |
+| Brasília      |    1 |
+| Brussels      |    1 |
+| Budapest      |    1 |
+| Buenos Aires  |    1 |
+| Chicago       |    1 |
+| Copenhagen    |    1 |
+| Cupertino     |    1 |
+| Delhi         |    1 |
+| Dijon         |    1 |
+| Dublin        |    1 |
+| Edinburgh     |    1 |
+| Edmonton      |    1 |
+| Fort Worth    |    1 |
+| Frankfurt     |    1 |
+| Halifax       |    1 |
++---------------+------+
+(Output limit exceeded, 25 of 53 total rows shown)
+
+6) Create a new customer invoice id by combining a customer’s invoice id with their first and last name while ordering your query in the following order: 
+firstname, lastname, and invoiceID.
+
+select i.InvoiceId,c.FirstName,(c.LastName, c.FirstName||c.LastName||i.InvoiceId) as newinvoice_id
+from Invoices i
+left join Customers c 
+on i.CustomerId = c.CustomerId
+where newinvoice_id LIKE 'AstridGruber%'
+
++-----------+-----------+----------+-----------------+
+| InvoiceId | FirstName | LastName | newinvoice_id   |
++-----------+-----------+----------+-----------------+
+|        78 | Astrid    | Gruber   | AstridGruber78  |
+|        89 | Astrid    | Gruber   | AstridGruber89  |
+|       144 | Astrid    | Gruber   | AstridGruber144 |
+|       273 | Astrid    | Gruber   | AstridGruber273 |
+|       296 | Astrid    | Gruber   | AstridGruber296 |
+|       318 | Astrid    | Gruber   | AstridGruber318 |
+|       370 | Astrid    | Gruber   | AstridGruber370 |
++-----------+-----------+----------+-----------------+
