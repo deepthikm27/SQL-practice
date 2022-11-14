@@ -1,0 +1,161 @@
+1) Using a subquery, find the names of all the tracks for the album "Californication".
+
+select Name
+from tracks
+where AlbumId in(select AlbumId
+from albums
+where Title = "Californication");
+
++-------------------+
+| Name              |
++-------------------+
+| Around The World  |
+| Parallel Universe |
+| Scar Tissue       |
+| Otherside         |
+| Get On Top        |
+| Californication   |
+| Easily            |
+| Porcelain         |
+| Emit Remmus       |
+| I Like Dirt       |
++-------------------+
+(Output limit exceeded, 10 of 15 total rows shown)
+
+2) Find the total number of invoices for each customer along with the customer's full name, city and email.
+
+select count(*) as Total_no_of_invoices,c.FirstName,c.LastName,c.City,c.Email
+from Invoices i
+left join Customers c
+on i.CustomerId = c.CustomerId
+group by i.CustomerId
+
++----------------------+-----------+-------------+---------------------+--------------------------+
+| Total_no_of_invoices | FirstName | LastName    | City                | Email                    |
++----------------------+-----------+-------------+---------------------+--------------------------+
+|                    7 | Luís      | Gonçalves   | São José dos Campos | luisg@embraer.com.br     |
+|                    7 | Leonie    | Köhler      | Stuttgart           | leonekohler@surfeu.de    |
+|                    7 | François  | Tremblay    | Montréal            | ftremblay@gmail.com      |
+|                    7 | Bjørn     | Hansen      | Oslo                | bjorn.hansen@yahoo.no    |
+|                    7 | František | Wichterlová | Prague              | frantisekw@jetbrains.com |
+|                    7 | Helena    | Holý        | Prague              | hholy@gmail.com          |
+|                    7 | Astrid    | Gruber      | Vienne              | astrid.gruber@apple.at   |
+|                    7 | Daan      | Peeters     | Brussels            | daan_peeters@apple.be    |
+|                    7 | Kara      | Nielsen     | Copenhagen          | kara.nielsen@jubii.dk    |
+|                    7 | Eduardo   | Martins     | São Paulo           | eduardo@woodstock.com.br |
++----------------------+-----------+-------------+---------------------+--------------------------+
+(Output limit exceeded, 10 of 59 total rows shown)
+
+3) Retrieve the track name, album, artistID, and trackID for all the albums.
+
+select t.name as Track_Name,a.Title as Album_Name,a.ArtistId,t.TrackId
+from tracks t
+inner join albums a
+on t.AlbumId = a.AlbumId
+
++-----------------------------------------+---------------------------------------+----------+---------+
+| Track_Name                              | Album_Name                            | ArtistId | TrackId |
++-----------------------------------------+---------------------------------------+----------+---------+
+| For Those About To Rock (We Salute You) | For Those About To Rock We Salute You |        1 |       1 |
+| Put The Finger On You                   | For Those About To Rock We Salute You |        1 |       6 |
+| Let's Get It Up                         | For Those About To Rock We Salute You |        1 |       7 |
+| Inject The Venom                        | For Those About To Rock We Salute You |        1 |       8 |
+| Snowballed                              | For Those About To Rock We Salute You |        1 |       9 |
+| Evil Walks                              | For Those About To Rock We Salute You |        1 |      10 |
+| C.O.D.                                  | For Those About To Rock We Salute You |        1 |      11 |
+| Breaking The Rules                      | For Those About To Rock We Salute You |        1 |      12 |
+| Night Of The Long Knives                | For Those About To Rock We Salute You |        1 |      13 |
+| Spellbound                              | For Those About To Rock We Salute You |        1 |      14 |
++-----------------------------------------+---------------------------------------+----------+---------+
+(Output limit exceeded, 10 of 3503 total rows shown)
+
+- select t.name as Track_Name,a.Title as Album_Name,a.ArtistId,t.TrackId
+from tracks t
+inner join albums a
+on t.AlbumId = a.AlbumId
+where t.TrackId = 12 and Album_Name LIKE "For Those About to Rock We Salute You" 
+
++--------------------+---------------------------------------+----------+---------+
+| Track_Name         | Album_Name                            | ArtistId | TrackId |
++--------------------+---------------------------------------+----------+---------+
+| Breaking The Rules | For Those About To Rock We Salute You |        1 |      12 |
++--------------------+---------------------------------------+----------+---------+
+
+4) Retrieve a list with the managers last name, and the last name of the employees who report to him or her.
+
+select m.LastName as Manager, e.LastName as Employee
+from Employees e 
+left join Employees m
+on e.ReportsTo = m.EmployeeId
+
++----------+----------+
+|  Manager | Employee |
++----------+----------+
+|     None | Adams    |
+|    Adams | Edwards  |
+|  Edwards | Peacock  |
+|  Edwards | Park     |
+|  Edwards | Johnson  |
+|    Adams | Mitchell |
+| Mitchell | King     |
+| Mitchell | Callahan |
++----------+----------+
+
+5) Find the name and ID of the artists who do not have albums. 
+
+select a.Name,a.ArtistId
+from artists a
+left join albums al 
+on a.ArtistId = al.ArtistId
+where al.Title is NULL
+
++----------------------------+----------+
+| Name                       | ArtistId |
++----------------------------+----------+
+| Milton Nascimento & Bebeto |       25 |
+| Azymuth                    |       26 |
+| João Gilberto              |       28 |
+| Bebel Gilberto             |       29 |
+| Jorge Vercilo              |       30 |
+| Baby Consuelo              |       31 |
+| Ney Matogrosso             |       32 |
+| Luiz Melodia               |       33 |
+| Nando Reis                 |       34 |
+| Pedro Luís & A Parede      |       35 |
++----------------------------+----------+
+(Output limit exceeded, 10 of 71 total rows shown)
+
+6) Use a UNION to create a list of all the employee's and customer's first names and last names ordered by the last name in descending order.
+
+select FirstName, LastName
+from Employees
+union
+select FirstName, LastName
+from Customers
+order by LastName DESC
+
++-----------+--------------+
+| FirstName | LastName     |
++-----------+--------------+
+| Fynn      | Zimmermann   |
+| Stanisław | Wójcik       |
+| František | Wichterlová  |
+| Johannes  | Van der Berg |
+| François  | Tremblay     |
+| Mark      | Taylor       |
+| Ellie     | Sullivan     |
+| Victor    | Stevens      |
+| Puja      | Srivastava   |
+| Jack      | Smith        |
++-----------+--------------+
+(Output limit exceeded, 10 of 67 total rows shown)
+
+7) See if there are any customers who have a different city listed in their billing city versus their customer city.
+
+Select c.CustomerId,c.City,i.BillingCity
+from Customers c
+inner join Invoices i
+on c.CustomerId = i.CustomerId
+WHERE c.City <> i.BillingCity
+
+---No customers have a different city listed in their billing city versus customer city.
